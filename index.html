@@ -3,13 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Schul-Dashboard & Fächermanager</title>
+  <title>Schul-Dashboard & Cloud-Manager</title>
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Google Fonts Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <script>
@@ -17,39 +14,21 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: { sans: ['Inter', 'sans-serif'] },
-          colors: {
-            brand: {
-              50: '#f0f7ff',
-              500: '#3b82f6',
-              600: '#2563eb',
-              900: '#0f172a'
-            }
-          }
+          fontFamily: { sans: ['Inter', 'sans-serif'] }
         }
       }
     }
   </script>
 
   <style>
-    body {
-      background-color: #0b0f17;
-      color: #e2e8f0;
-      font-family: 'Inter', sans-serif;
-    }
-    .glass-card {
-      background: rgba(17, 24, 39, 0.7);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .glass-card:hover {
-      border-color: rgba(59, 130, 246, 0.4);
-    }
+    body { background-color: #0b0f17; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+    .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card:hover { border-color: rgba(59, 130, 246, 0.4); }
   </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-12">
 
-  <!-- HEADER / NAVBAR -->
+  <!-- HEADER -->
   <header class="border-b border-slate-800/80 bg-slate-900/50 backdrop-blur-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap justify-between items-center gap-4">
       <div class="flex items-center space-x-3">
@@ -60,79 +39,31 @@
           <h1 class="text-xl font-bold text-white flex items-center gap-2">
             Schul-Dashboard <span class="text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-full font-medium">8 Fächer</span>
           </h1>
-          <p class="text-xs text-slate-400">Datei-Ablage & Dokumenten-Manager</p>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-3">
-        <div class="text-xs text-slate-400 bg-slate-800/60 border border-slate-700/50 px-3 py-1.5 rounded-lg flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span id="total-files-count">0 Dateien abgelegt</span>
+          <p class="text-xs text-slate-400">Synchronisiert auf Handy & PC via Cloud</p>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
+  <!-- MAIN GRID -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-
-    <!-- DASHBOARD GRID (8 FÄCHER) -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="subjects-grid">
-      <!-- Wird dynamsich per JavaScript befüllt -->
+      <!-- Fächer werden automatisch geladen -->
     </div>
-
   </main>
 
-  <!-- FILE PREVIEW MODAL -->
-  <div id="file-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-card w-full max-w-4xl max-h-[90vh] rounded-2xl flex flex-col overflow-hidden border border-slate-700/80 shadow-2xl">
-      <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/80">
-        <div class="flex items-center gap-2">
-          <i data-lucide="file-text" class="w-5 h-5 text-blue-400"></i>
-          <h3 id="modal-title" class="font-semibold text-white truncate max-w-md">Dateivorschau</h3>
-        </div>
-        <div class="flex items-center gap-2">
-          <a id="modal-download" href="#" download class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-medium transition flex items-center gap-1.5">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i> Herunterladen
-          </a>
-          <button onclick="closeModal()" class="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
-      </div>
-      <div id="modal-body" class="p-4 flex-1 overflow-auto bg-slate-950 flex justify-center items-center min-h-[400px]">
-        <!-- Content preview injected here -->
-      </div>
-    </div>
-  </div>
-
   <script>
-    // 8 Fächer Konfiguration
+    // hier trägst du einfach deine Links zu Google Drive / OneDrive Ordnern ein:
     const faecher = [
-      { id: 'deutsch', name: 'Deutsch', color: 'from-rose-500/20 to-red-600/10', border: 'hover:border-rose-500/50', badge: 'bg-rose-500/10 text-rose-400 border-rose-500/20', icon: 'book-open' },
-      { id: 'kunst', name: 'Kunst', color: 'from-amber-500/20 to-orange-600/10', border: 'hover:border-amber-500/50', badge: 'bg-amber-500/10 text-amber-400 border-amber-500/20', icon: 'palette' },
-      { id: 'geschichte', name: 'Geschichte', color: 'from-yellow-500/20 to-amber-600/10', border: 'hover:border-yellow-500/50', badge: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', icon: 'landmark' },
-      { id: 'geo', name: 'Geographie', color: 'from-emerald-500/20 to-green-600/10', border: 'hover:border-emerald-500/50', badge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', icon: 'globe' },
-      { id: 'englisch', name: 'Englisch', color: 'from-cyan-500/20 to-teal-600/10', border: 'hover:border-cyan-500/50', badge: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', icon: 'languages' },
-      { id: 'mathe', name: 'Mathematik', color: 'from-blue-500/20 to-indigo-600/10', border: 'hover:border-blue-500/50', badge: 'bg-blue-500/10 text-blue-400 border-blue-500/20', icon: 'calculator' },
-      { id: 'sport', name: 'Sport', color: 'from-purple-500/20 to-violet-600/10', border: 'hover:border-purple-500/50', badge: 'bg-purple-500/10 text-purple-400 border-purple-500/20', icon: 'activity' },
-      { id: 'gk', name: 'Gemeinschaftskunde', color: 'from-fuchsia-500/20 to-pink-600/10', border: 'hover:border-fuchsia-500/50', badge: 'bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/20', icon: 'newspaper' }
+      { id: 'deutsch', name: 'Deutsch', link: 'https://drive.google.com/drive/folders/1Oo8HuIqBHACLarrfdeok2FXX23zu2tj3?usp=drive_link', border: 'hover:border-rose-500/50', badge: 'bg-rose-500/10 text-rose-400 border-rose-500/20', icon: 'book-open' },
+      { id: 'kunst', name: 'Kunst', link: 'https://drive.google.com/drive/folders/1bKqClqbh9FaPM8RltgE4izm2xJyfx9_Z?usp=drive_link', border: 'hover:border-amber-500/50', badge: 'bg-amber-500/10 text-amber-400 border-amber-500/20', icon: 'palette' },
+      { id: 'geschichte', name: 'Geschichte', link: 'https://drive.google.com/drive/folders/1Wr71s5vEUPjGyAkT3mwiPAMTaeE93zhz?usp=drive_link', border: 'hover:border-yellow-500/50', badge: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20', icon: 'landmark' },
+      { id: 'geo', name: 'Geographie', link: 'https://drive.google.com/drive/folders/1Pjwd5FTcGbGpRlS5svXx38lZFqxSV7Bc?usp=drive_link', border: 'hover:border-emerald-500/50', badge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20', icon: 'globe' },
+      { id: 'englisch', name: 'Englisch', link: 'https://drive.google.com/drive/folders/1zgbUwHG4OqMVDl5-13I-s_X3WfEntMEx?usp=drive_link', border: 'hover:border-cyan-500/50', badge: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20', icon: 'languages' },
+      { id: 'mathe', name: 'Mathematik', link: 'https://drive.google.com/drive/folders/1790ce5q1euYX21cjFtBj04BwSuKdukes?usp=drive_link', border: 'hover:border-blue-500/50', badge: 'bg-blue-500/10 text-blue-400 border-blue-500/20', icon: 'calculator' },
+      { id: 'sport', name: 'Sport', link: 'https://drive.google.com/drive/folders/1lZ61oNY2nHCvMNiUp0agAtPGNz32eVnT?usp=drive_link', border: 'hover:border-purple-500/50', badge: 'bg-purple-500/10 text-purple-400 border-purple-500/20', icon: 'activity' },
+      { id: 'gk', name: 'Gemeinschaftskunde', link: 'https://drive.google.com/drive/folders/14zi5r4o7yDkF4kIGbXAz6knROBPbSL2D?usp=drive_link', border: 'hover:border-fuchsia-500/50', badge: 'bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/20', icon: 'newspaper' }
     ];
-
-    let db;
-    const dbReq = indexedDB.open('GK_FaecherManagerDB', 1);
-
-    dbReq.onupgradeneeded = (e) => {
-      db = e.target.result;
-      if (!db.objectStoreNames.contains('files')) {
-        db.createObjectStore('files', { keyPath: 'id', autoIncrement: true });
-      }
-    };
-
-    dbReq.onsuccess = (e) => {
-      db = e.target.result;
-      initDashboard();
-    };
 
     function initDashboard() {
       const grid = document.getElementById('subjects-grid');
@@ -140,11 +71,10 @@
 
       faecher.forEach(fach => {
         const card = document.createElement('div');
-        card.className = `glass-card rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 ${fach.border} bg-gradient-to-br ${fach.color}`;
+        card.className = `glass-card rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 ${fach.border}`;
         
         card.innerHTML = `
           <div>
-            <!-- Card Header -->
             <div class="flex items-center justify-between mb-4">
               <div class="flex items-center gap-2.5">
                 <div class="p-2 bg-slate-800/80 rounded-lg text-slate-200 border border-slate-700/50">
@@ -152,172 +82,24 @@
                 </div>
                 <h2 class="font-semibold text-lg text-white">${fach.name}</h2>
               </div>
-              <span id="count-${fach.id}" class="text-xs px-2.5 py-1 rounded-full border font-medium ${fach.badge}">0 Dateien</span>
+              <span class="text-xs px-2.5 py-1 rounded-full border font-medium ${fach.badge}">Cloud</span>
             </div>
 
-            <!-- Upload Zone -->
-            <label class="group relative flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-700/80 hover:border-blue-500/60 rounded-xl cursor-pointer bg-slate-900/40 hover:bg-slate-800/50 transition mb-4">
-              <i data-lucide="upload-cloud" class="w-6 h-6 text-slate-400 group-hover:text-blue-400 transition mb-1"></i>
-              <span class="text-xs text-slate-300 font-medium group-hover:text-blue-300">Datei hochladen</span>
-              <span class="text-[10px] text-slate-500">PDF, Bild, Doc</span>
-              <input type="file" class="hidden" onchange="handleFileUpload('${fach.id}', this)">
-            </label>
+            <p class="text-xs text-slate-400 mb-6">Öffne den Ordner, um Dateien anzusehen oder auf Handy & PC hochzuladen.</p>
 
-            <!-- File List -->
-            <div class="space-y-2 max-h-[180px] overflow-y-auto pr-1" id="list-${fach.id}">
-              <p class="text-xs text-slate-500 text-center py-4">Keine Dateien abgelegt</p>
-            </div>
+            <a href="${fach.link}" target="_blank" class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold transition flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20">
+              <i data-lucide="external-link" class="w-4 h-4"></i> Ordner öffnen
+            </a>
           </div>
         `;
 
         grid.appendChild(card);
-        loadSubjectFiles(fach.id);
       });
 
       lucide.createIcons();
     }
 
-    function handleFileUpload(fachId, input) {
-      if (!input.files.length) return;
-      const file = input.files[0];
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const record = {
-          fach: fachId,
-          name: file.name,
-          type: file.type,
-          size: (file.size / 1024 / 1024).toFixed(2) + ' MB',
-          data: e.target.result,
-          date: new Date().toLocaleDateString('de-DE')
-        };
-
-        const tx = db.transaction('files', 'readwrite');
-        tx.objectStore('files').add(record);
-        tx.oncomplete = () => {
-          input.value = '';
-          loadSubjectFiles(fachId);
-          updateTotalCount();
-        };
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function loadSubjectFiles(fachId) {
-      const tx = db.transaction('files', 'readonly');
-      const store = tx.objectStore('files');
-      const listEl = document.getElementById(`list-${fachId}`);
-      const countEl = document.getElementById(`count-${fachId}`);
-
-      const files = [];
-      store.openCursor().onsuccess = (e) => {
-        const cursor = e.target.result;
-        if (cursor) {
-          if (cursor.value.fach === fachId) {
-            files.push({ id: cursor.key, ...cursor.value });
-          }
-          cursor.continue();
-        } else {
-          countEl.textContent = `${files.length} Datei${files.length === 1 ? '' : 'en'}`;
-          
-          if (files.length === 0) {
-            listEl.innerHTML = '<p class="text-xs text-slate-500 text-center py-4">Keine Dateien abgelegt</p>';
-            return;
-          }
-
-          listEl.innerHTML = '';
-          files.forEach(file => {
-            const item = document.createElement('div');
-            item.className = 'flex items-center justify-between p-2.5 bg-slate-900/80 border border-slate-800 rounded-lg hover:border-slate-700 transition group';
-            item.innerHTML = `
-              <div class="flex items-center gap-2 overflow-hidden mr-2">
-                <i data-lucide="${getFileIcon(file.type)}" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
-                <div class="truncate">
-                  <p class="text-xs font-medium text-slate-200 truncate" title="${file.name}">${file.name}</p>
-                  <p class="text-[10px] text-slate-500">${file.date}</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-1 opacity-90 group-hover:opacity-100">
-                <button onclick="openFileModal(${file.id})" title="Öffnen" class="p-1 text-slate-400 hover:text-blue-400 hover:bg-slate-800 rounded transition">
-                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                </button>
-                <button onclick="deleteFile(${file.id}, '${fachId}')" title="Löschen" class="p-1 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded transition">
-                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                </button>
-              </div>
-            `;
-            listEl.appendChild(item);
-          });
-          lucide.createIcons();
-        }
-      };
-      updateTotalCount();
-    }
-
-    function getFileIcon(type) {
-      if (type.includes('image')) return 'image';
-      if (type.includes('pdf')) return 'file-text';
-      return 'file';
-    }
-
-    function updateTotalCount() {
-      const tx = db.transaction('files', 'readonly');
-      const store = tx.objectStore('files');
-      const req = store.count();
-      req.onsuccess = () => {
-        document.getElementById('total-files-count').textContent = `${req.result} Datei${req.result === 1 ? '' : 'en'} abgelegt`;
-      };
-    }
-
-    function openFileModal(id) {
-      const tx = db.transaction('files', 'readonly');
-      const store = tx.objectStore('files');
-      const req = store.get(id);
-
-      req.onsuccess = () => {
-        const file = req.result;
-        if (!file) return;
-
-        document.getElementById('modal-title').textContent = file.name;
-        const downloadBtn = document.getElementById('modal-download');
-        downloadBtn.href = file.data;
-        downloadBtn.download = file.name;
-
-        const modalBody = document.getElementById('modal-body');
-        modalBody.innerHTML = '';
-
-        if (file.type.includes('image')) {
-          modalBody.innerHTML = `<img src="${file.data}" class="max-h-[70vh] object-contain rounded-lg border border-slate-800" alt="Vorschau" />`;
-        } else if (file.type.includes('pdf')) {
-          modalBody.innerHTML = `<iframe src="${file.data}" class="w-full h-[70vh] rounded-lg border border-slate-800"></iframe>`;
-        } else {
-          modalBody.innerHTML = `
-            <div class="text-center py-12">
-              <i data-lucide="file-check" class="w-16 h-16 text-slate-600 mx-auto mb-3"></i>
-              <p class="text-sm text-slate-300 font-medium mb-1">${file.name}</p>
-              <p class="text-xs text-slate-500 mb-4">Dieses Dateiformat kann nicht direkt im Browser angezeigt werden.</p>
-              <a href="${file.data}" download="${file.name}" class="px-4 py-2 bg-blue-600 text-white text-xs rounded-lg font-medium inline-flex items-center gap-2">
-                <i data-lucide="download" class="w-4 h-4"></i> Datei Herunterladen
-              </a>
-            </div>
-          `;
-          lucide.createIcons();
-        }
-
-        document.getElementById('file-modal').classList.remove('hidden');
-      };
-    }
-
-    function closeModal() {
-      document.getElementById('file-modal').classList.add('hidden');
-    }
-
-    function deleteFile(id, fachId) {
-      if (!confirm('Möchtest du diese Datei wirklich löschen?')) return;
-      const tx = db.transaction('files', 'readwrite');
-      tx.objectStore('files').delete(id);
-      tx.oncomplete = () => loadSubjectFiles(fachId);
-    }
+    initDashboard();
   </script>
 </body>
 </html>
